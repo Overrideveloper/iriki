@@ -4,14 +4,23 @@ namespace iriki;
 
 class user extends \iriki\request
 {
+	private static $generator = null;
+
 	private static function generate()
 	{
 		$seed = time(NULL);
 
 		$data = array();
 
-		return \PseudoCrypt::hash($seed, 6);
+		if (is_null(Self::$generator)) {
+			Self::$generator = (new \RandomLib\Factory)->getLowStrengthGenerator();
+		}
+
+		return Self::$generator->generateString(6);
+
 	}
+
+	public function delete($request, $wrap = true) {}
 
 	public function read_by_username($request, $wrap = true)
 	{
